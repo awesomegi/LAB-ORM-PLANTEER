@@ -1,0 +1,100 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Planteer{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'main/css/styles.css' %}" />
+</head>
+<body>
+
+  <!-- ── Navbar ─────────────────────────────────────────── -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="{% url 'home' %}" class="navbar-logo">Planteer</a>
+
+      <!-- Mobile toggle -->
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <div class="navbar-links" id="navLinks">
+        <a href="{% url 'all_plants' %}">All Plants</a>
+        <a href="{% url 'contact' %}">Contact Us</a>
+        <a href="{% url 'new_plant' %}" class="btn btn-sm">Add Plant</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── Django Flash Messages ──────────────────────────── -->
+  {% if messages %}
+    <div class="messages-container">
+      {% for message in messages %}
+        <div class="message {{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <!-- ── Page Content ───────────────────────────────────── -->
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- ── Footer ─────────────────────────────────────────── -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <p class="brand-name">Planteer</p>
+        <div class="social-icons">
+          <a href="#" title="Twitter">𝕏</a>
+          <a href="#" title="Instagram">◎</a>
+          <a href="#" title="Facebook">f</a>
+        </div>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Explore</h4>
+          <ul>
+            <li><a href="{% url 'all_plants' %}">All Plants</a></li>
+            <li><a href="{% url 'search' %}">Search</a></li>
+            <li><a href="{% url 'new_plant' %}">Add Plant</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Categories</h4>
+          <ul>
+            <li><a href="{% url 'all_plants' %}?category=TREE">Trees</a></li>
+            <li><a href="{% url 'all_plants' %}?category=FLOWER">Flowers</a></li>
+            <li><a href="{% url 'all_plants' %}?category=HERB">Herbs</a></li>
+            <li><a href="{% url 'all_plants' %}?category=FRUIT">Fruits</a></li>
+            <li><a href="{% url 'all_plants' %}?category=VEGETABLE">Vegetables</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'contact' %}">Contact</a></li>
+            <li><a href="{% url 'messages_list' %}">Messages</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Simple mobile nav toggle (no JS framework) -->
+  <script>
+    const toggle = document.getElementById('navToggle');
+    const links  = document.getElementById('navLinks');
+    if (toggle && links) {
+      toggle.addEventListener('click', function () {
+        links.classList.toggle('open');
+      });
+    }
+  </script>
+
+</body>
+</html>

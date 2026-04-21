@@ -1,0 +1,32 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Messages from Users — Planteer{% endblock %}
+
+{% block content %}
+<div class="messages-page">
+  <h1>Messages from Users</h1>
+
+  {% if contact_messages %}
+    <div class="msg-grid">
+      {% for msg in contact_messages %}
+        <div class="msg-card">
+          <div class="msg-card-header">
+            <div class="user-icon">👤</div>
+            <div class="msg-card-meta">
+              <p class="full-name">{{ msg.first_name }} {{ msg.last_name }}</p>
+              <p class="email-link"><a href="mailto:{{ msg.email }}">{{ msg.email }}</a></p>
+            </div>
+          </div>
+          <div class="msg-card-body">
+            <p>{{ msg.message }}</p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="msg-empty">
+      <p>No messages yet. Be the first to <a href="{% url 'contact' %}" style="text-decoration:underline;">reach out</a>!</p>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

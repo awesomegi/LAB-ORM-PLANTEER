@@ -1,0 +1,66 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Planteer — Plant Database For Plant Lovers{% endblock %}
+
+{% block content %}
+
+  <!-- ── Hero ───────────────────────────────────────────── -->
+  <section>
+    <div class="hero">
+      <div class="hero-text">
+        <h1>Planteer &mdash; Plant Database For Plants Lovers</h1>
+        <form class="hero-search" action="{% url 'search' %}" method="get">
+          <input
+            type="text"
+            name="q"
+            placeholder="Search plants by name or description..."
+            aria-label="Search plants"
+          />
+          <button type="submit" class="btn">Search</button>
+        </form>
+      </div>
+      <div class="hero-img">
+        {% if latest_plants and latest_plants.0.image %}
+          <img src="{{ latest_plants.0.image.url }}" alt="Featured plant" />
+        {% else %}
+          <div class="hero-img-placeholder">🌿 Planteer</div>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Latest Plants ──────────────────────────────────── -->
+  <section class="plants-section">
+    <div class="section-header">
+      <h2>Plants</h2>
+      <a href="{% url 'all_plants' %}" class="more-link">More &rarr;</a>
+    </div>
+    <p class="section-subheading">Learn more about plants</p>
+
+    {% if latest_plants %}
+      <div class="card-grid">
+        {% for plant in latest_plants %}
+          <div class="plant-card">
+            <a href="{% url 'plant_detail' plant.id %}">
+              {% if plant.image %}
+                <img class="card-img" src="{{ plant.image.url }}" alt="{{ plant.name }}" />
+              {% else %}
+                <div class="card-img-placeholder">No image</div>
+              {% endif %}
+              <div class="card-body">
+                <p class="card-name">{{ plant.name }}</p>
+                <p class="card-about">{{ plant.about }}</p>
+                <p class="card-category">{{ plant.get_category_display }}</p>
+              </div>
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <p>No plants yet. <a href="{% url 'new_plant' %}" style="text-decoration:underline;">Add the first one!</a></p>
+      </div>
+    {% endif %}
+  </section>
+
+{% endblock %}

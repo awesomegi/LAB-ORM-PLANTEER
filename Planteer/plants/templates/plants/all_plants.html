@@ -1,0 +1,67 @@
+{% extends 'main/base.html' %}
+
+{% block title %}All Plants — Planteer{% endblock %}
+
+{% block content %}
+
+  <div class="page-header">
+    <h1>All Plants</h1>
+  </div>
+
+  <div class="all-plants-grid">
+    <!-- ── Filter Form ─────────────────────────────────── -->
+    <form class="filter-bar" method="get" action="{% url 'all_plants' %}">
+      <select name="category" aria-label="Filter by category">
+        <option value="">All Categories</option>
+        {% for value, label in categories %}
+          <option value="{{ value }}" {% if selected_category == value %}selected{% endif %}>
+            {{ label }}
+          </option>
+        {% endfor %}
+      </select>
+
+      <label class="checkbox-inline">
+        <input
+          type="checkbox"
+          name="is_edible"
+          value="true"
+          {% if selected_edible == 'true' %}checked{% endif %}
+        />
+        Edible only
+      </label>
+
+      <button type="submit" class="btn btn-sm">Apply</button>
+
+      {% if selected_category or selected_edible %}
+        <a href="{% url 'all_plants' %}" class="btn btn-sm btn-outline">Clear</a>
+      {% endif %}
+    </form>
+
+    <!-- ── Plant Grid ──────────────────────────────────── -->
+    {% if plants %}
+      <div class="card-grid">
+        {% for plant in plants %}
+          <div class="plant-card">
+            <a href="{% url 'plant_detail' plant.id %}">
+              {% if plant.image %}
+                <img class="card-img" src="{{ plant.image.url }}" alt="{{ plant.name }}" />
+              {% else %}
+                <div class="card-img-placeholder">No image</div>
+              {% endif %}
+              <div class="card-body">
+                <p class="card-name">{{ plant.name }}</p>
+                <p class="card-about">{{ plant.about }}</p>
+                <p class="card-category">{{ plant.get_category_display }}</p>
+              </div>
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <p>No plants match your filters.</p>
+      </div>
+    {% endif %}
+  </div>
+
+{% endblock %}

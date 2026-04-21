@@ -1,0 +1,57 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Search Results — Planteer{% endblock %}
+
+{% block content %}
+<div class="search-page">
+  <h1>Search Results</h1>
+
+  <form class="search-bar" action="{% url 'search' %}" method="get">
+    <input
+      type="text"
+      name="q"
+      value="{{ query }}"
+      placeholder="Search by plant name or description..."
+      required
+      minlength="1"
+      aria-label="Search plants"
+    />
+    <button type="submit" class="btn">Search</button>
+  </form>
+
+  {% if query %}
+    <p class="search-results-count">
+      {% if plants %}
+        {{ plants|length }} result{{ plants|length|pluralize }} for &ldquo;{{ query }}&rdquo;
+      {% else %}
+        No results for &ldquo;{{ query }}&rdquo;
+      {% endif %}
+    </p>
+  {% endif %}
+
+  {% if plants %}
+    <div class="card-grid">
+      {% for plant in plants %}
+        <div class="plant-card">
+          <a href="{% url 'plant_detail' plant.id %}">
+            {% if plant.image %}
+              <img class="card-img" src="{{ plant.image.url }}" alt="{{ plant.name }}" />
+            {% else %}
+              <div class="card-img-placeholder">No image</div>
+            {% endif %}
+            <div class="card-body">
+              <p class="card-name">{{ plant.name }}</p>
+              <p class="card-about">{{ plant.about }}</p>
+              <p class="card-category">{{ plant.get_category_display }}</p>
+            </div>
+          </a>
+        </div>
+      {% endfor %}
+    </div>
+  {% elif query %}
+    <div class="empty-state">
+      <p>No plants found. <a href="{% url 'all_plants' %}" style="text-decoration:underline;">Browse all plants</a></p>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
