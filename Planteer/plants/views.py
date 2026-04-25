@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from .models import Plant
-from .forms import PlantForm
+from .forms import PlantForm, CommentForm
 
 
 def all_plants(request):
@@ -28,9 +28,26 @@ def all_plants(request):
 def plant_detail(request, plant_id):
     plant = get_object_or_404(Plant, id=plant_id)
     related_plants = Plant.objects.filter(category=plant.category).exclude(id=plant_id)[:3]
+    comments = plant.comments.all()
+
+    if request.method == 'POST':
+        comment_form = CommentForm(request.POST)
+        if comment_form.is_valid():
+            comment = comment_form.save(commit=False)
+            comment.plant = plant
+            comment.save()
+            messages.success(request, 'Your comment has been added!')
+            return redirect('plant_detail', plant_id=plant.id)
+        else:
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        comment_form = CommentForm()
+
     return render(request, 'plants/plant_detail.html', {
         'plant': plant,
         'related_plants': related_plants,
+        'comments': comments,
+        'comment_form': comment_form,
     })
 
 

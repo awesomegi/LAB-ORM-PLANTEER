@@ -1,5 +1,5 @@
 from django import forms
-from .models import Plant
+from .models import Plant, Comment
 
 
 class PlantForm(forms.ModelForm):
@@ -32,3 +32,18 @@ class PlantForm(forms.ModelForm):
         if len(name) < 2:
             raise forms.ValidationError("Plant name must be at least 2 characters.")
         return name
+
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['name', 'content']
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'placeholder': 'Your name',
+            }),
+            'content': forms.Textarea(attrs={
+                'placeholder': 'Leave your feedback...',
+                'rows': 3,
+            }),
+        }

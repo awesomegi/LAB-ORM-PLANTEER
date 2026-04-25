@@ -72,4 +72,49 @@
     </div>
   {% endif %}
 
+  <!-- ── Comments ──────────────────────────────────────── -->
+  <hr class="divider" />
+  <div class="comments-section">
+
+    <h2>Comments ({{ comments.count }})</h2>
+
+    {% if comments %}
+      {% for comment in comments %}
+        <div class="comment-card">
+          <div class="comment-header">
+            <span class="comment-author">{{ comment.name }}</span>
+            <span class="comment-date">{{ comment.created_at|date:"N j, Y" }}</span>
+          </div>
+          <p class="comment-content">{{ comment.content }}</p>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p class="no-comments">No comments yet. Be the first to leave feedback!</p>
+    {% endif %}
+
+    <!-- Add a comment form -->
+    <div class="comment-form-wrapper">
+      <h3>Leave a Comment</h3>
+      <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="{{ comment_form.name.id_for_label }}">Your Name</label>
+          {{ comment_form.name }}
+          {% if comment_form.name.errors %}
+            <p class="field-error">{{ comment_form.name.errors.0 }}</p>
+          {% endif %}
+        </div>
+        <div class="form-group">
+          <label for="{{ comment_form.content.id_for_label }}">Feedback</label>
+          {{ comment_form.content }}
+          {% if comment_form.content.errors %}
+            <p class="field-error">{{ comment_form.content.errors.0 }}</p>
+          {% endif %}
+        </div>
+        <button type="submit" class="btn">Submit Comment</button>
+      </form>
+    </div>
+
+  </div>
+
 {% endblock %}
